@@ -47,14 +47,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // If everything is ok, try to upload file and insert data into the database
         if (move_uploaded_file($_FILES["productImage"]["tmp_name"], $targetFile)) {
+            // Resize the uploaded image
+            list($width, $height) = getimagesize($targetFile);
+            $newWidth = 288;
+            $newHeight = 175;
+            $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
+            $source = imagecreatefromjpeg($targetFile); // Use imagecreatefrompng() for PNG images
+            imagecopyresized($resizedImage, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+        
+            // Save the resized image to the folder
+            $resizedFilePath = "img/" . basename($_FILES["productImage"]["name"]);
+            imagejpeg($resizedImage, $resizedFilePath); // Use imagepng() for PNG images
+            imagedestroy($resizedImage);
+        
+            // Insert data into the database
             $query = "INSERT INTO items (category, item_name, gender, size, price, quantity, image_path) 
-                      VALUES ('$category', '$item_name', '$gender', '$size', $price, $quantity, '$targetFile')";
+                      VALUES ('$category', '$item_name', '$gender', '$size', $price, $quantity, '$resizedFilePath')";
             mysqli_query($con, $query);
-            echo "Product added successfully.";
-            echo "<a href='admin_dashboard.php'><button>Go back</button></a>";
+            echo "<h2>Product added successfully.</h2>";
+            echo "<a href='admin_dashboard.php'><br><button>Go back</button></a>";
         } else {
             echo "Sorry, there was an error uploading your file.";
         }
     }
 }
-?>

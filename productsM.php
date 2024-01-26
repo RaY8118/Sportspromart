@@ -52,22 +52,46 @@ while ($row = mysqli_fetch_assoc($categoryResult)) {
             <div class="row">
                 <?php
                 // Order items by category
+                $result = null; // Initialize result variable
+
                 if ($category == 'Accessories') {
                     // For Accessories, include both male and female
                     $query = "SELECT * FROM items WHERE category = '$category'";
+                    $result = mysqli_query($con, $query);
                 } else {
                     // For other categories, filter by gender
                     $query = "SELECT * FROM items WHERE gender = 'Male' AND category = '$category'";
+                    $result = mysqli_query($con, $query);
                 }
-                $result = mysqli_query($con, $query);
 
                 $counter = 0; // Counter to keep track of items in each row
                 while ($row = mysqli_fetch_assoc($result)) {
                     $productID = $row['id'];
                     $productName = $row['item_name'];
                     $productPrice = $row['price'];
-                    $productsize = $row['size'];
+                    $category = $row['category'];
+                    $gender = $row['gender'];
+                    $size = $row['size'];
                     $imagePath = $row['image_path']; // Fetch image path from the database
+
+                    // Convert size for shoes
+                    if ($category == 'Shoes') {
+                        // Convert size from database value to display value
+                        if ($size == 'S') {
+                            $displaySize = '30';
+                        } elseif ($size == 'M') {
+                            $displaySize = '32';
+                        }elseif ($size == 'L') {
+                            $displaySize = '34';
+                        }elseif ($size == 'XL') {
+                            $displaySize = '36';
+                        } else {
+                            $displaySize = $size; // Use the original size if not 'S' or 'M'
+                        }
+
+                        // Update the $size variable with the converted value
+                        $size = $displaySize;
+                    }
                 ?>
                     <div class="col-md-3">
                         <div class="thumbnail">
@@ -77,7 +101,12 @@ while ($row = mysqli_fetch_assoc($categoryResult)) {
                             <div class="caption">
                                 <h3><?php echo $productName; ?></h3>
                                 <p>Price: Rs. <?php echo $productPrice; ?></p>
-                                <p>Size: <?php echo $productsize; ?></p>
+                                <?php
+                                // Display size information conditionally
+                                if ($category == 'Shoes') {
+                                    echo "<p>Size: $size</p>"; // Display the converted size
+                                }
+                                ?>
                                 <?php if (!isset($_SESSION['email'])) {  ?>
                                     <p><a href="login.php" role="button" class="btn btn-primary btn-block">Buy Now</a></p>
                                 <?php } else {
@@ -111,5 +140,4 @@ while ($row = mysqli_fetch_assoc($categoryResult)) {
         </footer>
     </div>
 </body>
-
 </html>

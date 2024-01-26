@@ -100,6 +100,7 @@
                     <option value="L">L</option>
                     <option value="XL">XL</option>
                     <option value="XXL">XXL</option>
+                    <option value="NULL">NULL</option>
                 </select>
             </div>
             <div class="form-group">

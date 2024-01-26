@@ -1,3 +1,59 @@
+<?php
+session_start();
+require 'connection.php';
+
+if (!isset($_SESSION['admin'])) {
+    header("Location: admin_login.php");
+    exit();
+}
+
+// Initialize variables to hold product details and error messages
+$product_details = null;
+$display_error = null;
+$remove_success = null;
+$remove_error = null;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if the form is submitted to display product details
+    if (isset($_POST['display_id'])) {
+        $display_id = mysqli_real_escape_string($con, $_POST['display_id']);
+
+        // Query to fetch product details based on the entered ID
+        $query = "SELECT * FROM items WHERE id = '$display_id'";
+        $result = mysqli_query($con, $query);
+
+        // Check if the product with the entered ID exists
+        if (mysqli_num_rows($result) > 0) {
+            // Product exists, fetch details
+            $product_details = mysqli_fetch_assoc($result);
+        } else {
+            // Product not found with the specified ID
+            $display_error = "Product not found with the specified ID.";
+        }
+    }
+
+    // Check if the form is submitted to remove a product
+    if (isset($_POST['remove_id'])) {
+        $remove_id = mysqli_real_escape_string($con, $_POST['remove_id']);
+
+        // Query to remove the product with the given ID
+        $remove_query = "DELETE FROM items WHERE id = '$remove_id'";
+        $remove_result = mysqli_query($con, $remove_query);
+
+        if ($remove_result) {
+            // Product removed successfully
+            $remove_success = "Product removed successfully.";
+            // Reset product details to avoid displaying removed product
+            $product_details = null;
+        } else {
+            // Error in removing the product
+            $remove_error = "Error removing the product.";
+        }
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html>
 
