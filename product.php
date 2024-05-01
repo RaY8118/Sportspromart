@@ -23,7 +23,7 @@ $result = mysqli_query($con, $query);
     <!-- External CSS -->
     <link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
-<!-- ... (unchanged HTML header) ... -->
+
 
 <body>
     <div>
@@ -69,7 +69,6 @@ $result = mysqli_query($con, $query);
                 <?php } ?>
             </div>
         </div>
-        <!-- ... (unchanged HTML footer) ... -->
     </div>
 </body>
 

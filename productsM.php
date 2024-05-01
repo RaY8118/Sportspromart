@@ -135,7 +135,6 @@ while ($row = mysqli_fetch_assoc($categoryResult)) {
         <br><br><br><br><br>
         <footer class="footer">
             <div class="container">
-                <!-- Your footer content here -->
             </div>
         </footer>
     </div>

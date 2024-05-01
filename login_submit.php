@@ -38,7 +38,7 @@ if ($rows_fetched == 0) {
 
     if ($row['role'] == 'admin') {
         // Redirect to admin dashboard if the user is an admin
-        header('location: admin_dashboard.php');
+        header('location: index.php');
     } else {
         // Redirect to index.php if the user is a customer (or any other role)
         header('location: index.php');

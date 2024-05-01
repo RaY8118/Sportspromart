@@ -17,4 +17,4 @@ if (isset($_GET['id'])) {
     // Handle the case where 'id' is not set in the URL
     echo 'Invalid request';
 }
-?>
+
